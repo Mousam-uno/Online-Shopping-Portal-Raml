@@ -4,7 +4,7 @@ API endpoints
 
 -/order
 
-   -(post) -> to create an order
+   - (post) -> to create an order
   
 -/order/{orderID} 
 
