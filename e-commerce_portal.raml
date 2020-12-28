@@ -1,0 +1,81 @@
+#%RAML 1.0
+title: E-commerce_portal
+
+types:
+  OrderDetails: !include /Exchange_modules/orderDatatype.raml
+  
+traits:
+  client-id-required:
+    headers:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+    responses:
+      401:
+        description: Unauthorized, The client_id or client_secret are not valid or the client does not have access.
+      429:
+        description: The client used all of it's request quota for the current period.
+      500:
+        description: An error ocurred, see the specific message (Only if it is a WSDL enpoint).
+      503:
+        description: Contracts Information Unreachable.
+
+
+/order:
+  is: [client-id-required]
+  post:
+    description: Create an order. 
+   
+    body:
+      application/json:
+        type: OrderDetails
+        examples:
+          input: !include /examples/post-example.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message: Order created Successfully.
+ 
+   
+ 
+  /{orderID}:
+    is: [client-id-required]
+    
+    get:
+      description: get order info  
+      responses:
+        200:
+          body:
+            application/json:
+              
+              examples:
+                output: !include /examples/orderDetails.raml
+
+    put:
+      description: Update order. 
+      body:
+        application/json:
+          type: OrderDetails
+          examples: !include /examples/post-example.raml       
+      responses:
+        200:
+          body: 
+            application/json: 
+              example: 
+                message: "order updated"
+              
+    delete:
+      description: delete order 
+      queryParameters:
+        orderID:
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Order canceled
+                                  
